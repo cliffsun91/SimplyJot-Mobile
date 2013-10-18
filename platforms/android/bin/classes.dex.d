@@ -1,0 +1,21 @@
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes.dex : \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/helloworld/HelloWorld.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/BuildConfig.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/HelloWorld.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/R$attr.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/R$drawable.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/R$string.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/R$xml.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/com/phonegap/simplyjot/R.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$1.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$2.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$3$1.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$3$2.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$3$3.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$3$4.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$3$5.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$3.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser$InAppBrowserClient.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppBrowser.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/classes/org/apache/cordova/inappbrowser/InAppChromeClient.class \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/bin/dexedLibs/cordova-3.1.0-4822bd77b047b6569f7656930c62f148.jar \

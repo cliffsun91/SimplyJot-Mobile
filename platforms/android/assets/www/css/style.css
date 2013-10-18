@@ -1,0 +1,148 @@
+	#add_button {
+	    padding-top: 10px;
+	    padding-bottom: 10px;
+  	}
+
+	#textarea {
+		padding-bottom: 5px;
+	} 
+
+	.list {
+		padding-top: 20px;
+	}
+
+	.itemcount {
+		font-size: 12px;
+	}
+
+	#delete-post {
+		float: right;
+		font-size: 8px;
+	}
+
+	.split-button-custom {
+	    float: right;
+	    margin-right: 5px;
+	    padding-left: 4px;
+	    padding-right: 3px;
+	    border-radius: 5px;
+	    border-bottom-left-radius: 1em 1em;
+	    border-bottom-right-radius: 1em 1em;
+	    border-top-left-radius: 1em 1em;
+	    border-top-right-radius: 1em 1em;  
+	    /*-webkit-transition: left 0.01s;
+	    -moz-transition: left 0.01s; */
+	}
+
+	.split-button-custom.ng-enter, .split-button-custom.ng-leave {
+	    -webkit-transition:0.5s linear all;
+	    -moz-transition:0.5s linear all;
+	    -o-transition:0.5s linear all;
+	    transition:0.5s linear all;
+
+	    position:absolute;
+	    top:0;
+	    left:0;
+	    right:0;
+	}
+
+	.split-button-custom span.ui-btn-inner {
+	    border-bottom-left-radius: 1em 1em;
+	    border-bottom-right-radius: 1em 1em;
+	    border-top-left-radius: 1em 1em;
+	    border-top-right-radius: 1em 1em;
+	    padding-right: 0px;
+	}
+
+	.split-button-custom span.ui-icon {
+		background-color: #FF5252;
+	    margin-top: 0px;
+	    right: 0px;
+	    top: 0px;
+	    position: relative;
+	}
+
+	.posttext {
+		font-size: 16px;
+		white-space: pre-wrap;
+	}
+
+	.div-list-header {
+		font-size: 18px;
+		font-weight: bold;
+		padding-top: 20px;
+		padding-bottom: 5px;
+	}
+
+	.span-cancel-delete {
+		float: right;
+	}
+
+
+	.ui-block-a {
+		max-width:100%;
+		max-height:100%;
+	}
+
+	.ui-block-b {
+		max-width:100%;
+		max-height:100%;
+	}
+
+	.ui-block-c {
+		max-width:100%;
+		max-height:100%;
+	}
+
+
+	.btn-login-facebook {
+		background-image: url("../img/facebookLogo.png") !important;
+		background-size: contain;
+		width: 88px;
+		height: 88px;
+	}
+
+	.btn-login-twitter {
+		background-image: url("../img/twitterLogo.png") !important;
+		background-size: contain;
+		width: 88px;
+		height: 88px;
+	}
+
+	.btn-login-google {
+		background-image: url("../img/googleLogo.png") !important;
+		background-size: contain;
+		width: 88px;
+		height: 88px;
+	}
+
+	.div-login-icons {
+		margin:0 auto;
+	}
+
+	.span-login-header {
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.span-login-intro {
+		font-size: 18px;
+	}
+
+
+/*
+	.swipe {
+		overflow: hidden;
+		visibility: hidden;
+		position: relative;
+	}
+
+	.swipe-wrap {
+	  	overflow: hidden;
+	  	position: relative;
+	}
+	.swipe-wrap > div {
+		float:left;
+		width:100%;
+		position: relative;
+	}*/
