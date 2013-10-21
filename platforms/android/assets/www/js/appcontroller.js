@@ -1,44 +1,65 @@
+$('#mainpage').on('pagebeforeshow', function () {
+  $("#mainpage").trigger("create");
+});
 
-$(document).bind("mobileinit", onMobileInit);
-$(document).bind("pageinit", onPageLoad);
+$(document).on("mobileinit", onMobileInit);
+
+$(document).on("pageinit", onPageLoad);
+//angular.element(document).ready(onMobileInit);
 
 function onMobileInit() {
   //alert("Mobile Init");
   console.log("mobile init");
-  $.mobile.autoInitializePage = false;
+  //$.mobile.autoInitializePage = false;
+
+  // $.mobile.ajaxEnabled = false;
+  // $.mobile.linkBindingEnabled = false;
+  // $.mobile.hashListeningEnabled = false;
+  // $.mobile.pushStateEnabled = false;
 }
 
 function onPageLoad() {// Document.Ready
-  alert("Document Ready");
+  //alert("Document Ready");
   console.log("document ready");
   try {
-      alert("token:" + window.localStorage.getItem("auth_accessToken") + ", email: " + window.localStorage.getItem("auth_email"));
+      //alert("token:" + window.localStorage.getItem("auth_accessToken") + ", email: " + window.localStorage.getItem("auth_email"));
       if(window.localStorage.getItem("auth_accessToken") != null && 
          window.localStorage.getItem("auth_email") != null) {
-          window.location.href = "#mainpage";
+          $.mobile.changePage("#mainpage");
       } else {
-          window.location.href = "#login";
+          $.mobile.changePage("#login");
       }
   } catch (exception) {
 
   } finally {
-      alert("initialise page now!");
-      $.mobile.initializePage();
+      //alert("initialise page now!");
+      //$.mobile.initializePage();
   }
 }
+
 
 /******************************************************************/
 //Angular JS stuff - Controllers etc
 
+
+//testing stuff
 var postid = 1;
-var jot_get_posts_url = 'http://www.simplyjot.com/simplyjot/index.php/myposts/getallmyposts';
 var userid = 1;
-var app = angular.module('jot', ['ngTouch']);
+//**************
+
+var jot_get_posts_url = 'http://www.simplyjot.com/simplyjot/index.php/myposts/getallmyposts';
 var jot_login_url = 'http://www.simplyjot.com/simplyjot/index.php/site/externalLoginMobile?provider=';
+var app = angular.module('jot', ['ngTouch', 'ngRoute']);
 //var jot_login_url2 = 'http://www.simplyjot.com/simplyjot/index.php/site/externalLoginMobile?';
 
 
+
 app.controller('LoginCtrl', function ($scope, $window, $http) {
+
+  // $scope.nextPage = function() {
+  //   $.mobile.changePage("#mainpage", {transition: "slide"});
+  //   //$window.location.href = '/main';
+  // };
 
   $scope.loginExternal = function(method) {
     var ref = $window.open(jot_login_url + method, '_blank', 'location=no');
@@ -48,18 +69,14 @@ app.controller('LoginCtrl', function ($scope, $window, $http) {
                  '    var foo = document.body.outerText;\n' +
                  '    return foo;\n' +
                  '})()';
-      //if (event.url == jot_login_url + method){
       if((event.url).indexOf(jot_login_url + method) != -1) {
         ref.executeScript({code: code}, function(results) {
           if (results && results.length === 1){
             var data =  JSON.parse(results[0]);
-            //alert("Initial Result: " + data);
             if (data.status == "success"){
               $window.localStorage.setItem("auth_accessToken", data.token);
               $window.localStorage.setItem("auth_email", data.email);    
-              //alert("Result: " + data.status + ", " + $window.localStorage.getItem("auth_accessToken") + 
-              //                                ", " + $window.localStorage.getItem("auth_email"));
-              window.location.hash = "#mainpage";
+              $.mobile.changePage("#mainpage", {transition: "slide"});
             }        
             else {
               console.log("Error: status was '" + data.status + "' and status message was '" + data.statusMessage + "'");
@@ -75,35 +92,39 @@ app.controller('LoginCtrl', function ($scope, $window, $http) {
 });
 
 
-app.controller('ListCtrl', function ($scope, $http) {
+app.controller('ListCtrl', function ($scope, $http, $window) {
 
   $scope.postText = ''; //initialise it to empty string as it is null initially i believe
   $scope.posts = [];
-  //$scope.posts = [
-  //  {postContent:'This is the first item in the list', id: 0},
-  //  {postContent:'New items are inserted to the top of the list', id: 1}];
+  // $scope.posts = [
+  //   {postContent:'This is the first item in the list', id: 0},
+  //   {postContent:'New items are inserted to the top of the list', id: 1}];
   $scope.posts.reverse();  
   $scope.deletePostList = [];
 
 
   $scope.requestPosts = function() {
-    //alert(jot_get_posts_url);
+    var xsrf = {'Post[token]': $window.localStorage.getItem("auth_accessToken"), 
+                'Post[email]': $window.localStorage.getItem("auth_email")};
+
     $http({
-      method: 'JSONP', 
+      method: 'POST', 
       url: jot_get_posts_url,
-      params: {userId: userid, callback: 'JSON_CALLBACK'},
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      transformRequest: function(obj) {
+        var str = [];
+        for(var p in obj)
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+      },
+      data: xsrf
     })
     .then(function(response) {
+      console.log("Post with status: " + response.status + ", data: " + response.data);
+      alert("Post with status: " + response.status + ", data: " + response.data);
       $scope.posts = response.data;
       //$scope.$apply();
     });
-    // .success(function(data, status, headers, config) {
-    //     $scope.posts = data;
-    //     //alert('Success! data:' + data + ", status: " + status);
-    // }).error(function(data, status, headers, config) {
-    //     alert('Error! data:' + data + ", status: " + status);
-    //     console.info("data: " + data + "status: " + status);
-    // });
 
   };
 
@@ -117,7 +138,12 @@ app.controller('ListCtrl', function ($scope, $http) {
       $scope.posts.push({postContent:$scope.postText, id: postid});
       $scope.posts.reverse();
       $scope.postText = '';
-      $("#postlist").listview("refresh");
+      //$scope.$apply();
+      setTimeout(function () {
+        $("#postlist").listview("refresh"); }, 1);
+      //$("#mainpage").parent().trigger( "create" );
+      //$("#postlist").listview("refresh");
+
     }
   };
  
@@ -166,50 +192,6 @@ app.controller('ListCtrl', function ($scope, $http) {
   };
  
   $scope.delete = function(selected_post) {
-    // var msg = 'Hello';
-    // var options = {
-    //   resolve: {
-    //     msg: function () { return msg; }
-    //   }
-    // };
-    // var dialog = $dialog.dialog(options);
-    
-    // dialog.open('index_old.html', 'DCtrl');
-
-  //   $('<div>').simpledialog2({
-  //     mode: 'button',
-  //     //dialogAllow: true,  
-  //     width: '200px',
-  //     headerText: 'Confirm',
-  //     headerClose: true,
-  //     buttonPrompt: 'Are you sure?',
-  //     buttons : {
-  //       'OK': {
-  //         click: function () { 
-  //           var index = 0;
-  //           angular.forEach($scope.posts, function(post) {
-  //             if(post.text == selected_post.text){
-  //               $scope.posts.splice(index, 1);
-  //               $scope.$apply();
-  //               $("#postlist").listview("refresh");
-  //             }
-  //             index = index + 1;
-  //           });     
-  //         }
-  //       },
-  //       'Cancel': {
-  //         click: function () { 
-
-  //         },
-  //         icon: "delete",
-  //         theme: "c"
-  //       }
-  //     }
-  //   })
-  //   //alert('delete ' + post.id + '?');
-  //   //$scope.posts.remove()
-  // };
-
     var index = 0;
     angular.forEach($scope.posts, function(post) {
       if(post.postContent == selected_post.postContent){
@@ -223,49 +205,26 @@ app.controller('ListCtrl', function ($scope, $http) {
 
   };
 
+  //$scope.requestPosts();
+
 });
 
+app.directive('jqueryMobileTpl', function () {
+    return {
+        link: function (scope, elm, attr) {
+            elm.listview('refresh');
+        }
+    };
+});
+app.directive('repeatDone', function () {
+    return function (scope, element) {
+        // When the last element is rendered
+        if (scope.$last) { 
+            element.parent().listview('refresh');
+        }
+    }
+});
 
-// app.factory('postService', function($http) {
-//   return {
-//     getPosts: function() {
-//       return   
-//         $http({
-//           method: 'GET', 
-//           url: jot_get_posts_url,
-//           params: {userId: '1'}
-//         })
-//         .then(function(result) {
-//            return result.data;
-//           //alert('data is: ' + data);
-//         });
-//     }
-//   }
-// });
-
-// app.directive('jqueryMobileTpl', function() {
-//   return {
-//     link: function(scope, elm, attr) {
-//       elm.trigger('create');
-//     }
-//   };
-// });
-
-// app.directive('confirmationNeeded', function () {
-//   return {
-//     priority: 1,
-//     terminal: true,
-//     link: function (scope, element, attr) {
-//       var msg = attr.confirmationNeeded || "Are you sure?";
-//       var clickAction = attr.ngClick;
-//       element.bind('click',function () {
-//         if ( window.confirm(msg) ) {
-//           scope.$eval(clickAction)
-//         }
-//       });
-//     }
-//   };
-// });
 
 app.filter('orderPostsByTimePosted', function(){
  return function(input) {
@@ -295,5 +254,3 @@ function contains(a, obj) {
     return false;
 }
 
-
-//window.mySwipe = Swipe(document.getElementById('swipelist'));

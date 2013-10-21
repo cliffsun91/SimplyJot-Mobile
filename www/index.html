@@ -10,6 +10,7 @@
 	<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-touch.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-route.min.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js"></script>-->
     <script type="text/javascript" src="http://dev.jtsage.com/cdn/simpledialog/latest/jquery.mobile.simpledialog2.min.js"></script>
 
@@ -48,7 +49,7 @@
 		    <div class="ui-block-b"><a ng-click="loginExternal('twitter')" class="btn-login-twitter" data-role="button" data-inline="true"></a></div>
 		    <div class="ui-block-c"><a ng-click="loginExternal('google')" class="btn-login-google" data-role="button" data-inline="true"></a></div>
 		</div>
-
+<!-- 		<div><a data-role="button" ng-click="nextPage()">Next Page</a></div> -->
 		<!-- <div class="div-login-icons">
 			<span><a ng-click="loginExternal('facebook')" class="btn-login-facebook" data-role="button" data-inline="true"></a></span>
 			<span><a ng-click="loginExternal('twitter')" class="btn-login-twitter" data-role="button" data-inline="true"></a></span>
@@ -57,9 +58,6 @@
 	</div>
 </div>
 
-
-
-<!-- home page -->
 <div data-role="page" id="mainpage"> 
 	<div data-role="header">
 		<h1>Jot Down Anything</h1>
@@ -87,9 +85,8 @@
 				<span class="itemcount">{{count()}} items</span>
 			</div>
 
-			<!--<div class="list"></div>-->
 			<div class="list">
-				<ul ng-init="requestPosts()" id="postlist" data-role="listview" data-split-theme="d" class="swipe-wrap">
+				<ul ng-init="requestPosts()" id="postlist" data-role="listview" data-split-theme="d" class="swipe-wrap" repeat-done>
 	       			<li ng-repeat="post in posts | orderPostsByTimePosted" ng-swipe-left="addToDeleteList(post)" ng-swipe-right="removeFromDeleteList(post)">
 	       				 <!--ng-bind="post.text" -->
 	          			<a><div><p class="posttext">ID:{{post.id}} - Post: {{post.postContent}}</p></div></a>
@@ -103,25 +100,7 @@
 		</div>
 	</div> <!--content-->
 
-	<!-- unused popup -->
-	<div id="confirmdelete" class="ui-content" data-role="popup" data-theme="none">
-        
-        <p id="question">Are you sure you want to delete</p>
-        
-        <div class="ui-grid-a">
-            <div class="ui-block-a">
-                <a id="yes" data-role="button" data-mini="true" data-shadow="false" data-theme="b" data-rel="back">Yes</a>
-            </div>
-            <div class="ui-block-b">
-                <a id="cancel" data-role="button" data-mini="true" data-shadow="false" data-theme="b" data-rel="back">Cancel</a>                
-            </div>
-        </div>
-        
-	</div><!-- popup -->
-
 </div> 
-
-
 
 </body>
 </html>
