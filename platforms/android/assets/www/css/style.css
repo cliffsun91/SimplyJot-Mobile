@@ -11,6 +11,15 @@
 		padding-top: 20px;
 	}
 
+	.list-item {
+		padding-top: 10px;
+	}
+
+	.posttext {
+		font-size: 16px;
+		white-space: pre-wrap;
+	}
+
 	.itemcount {
 		font-size: 12px;
 	}
@@ -60,11 +69,6 @@
 	    right: 0px;
 	    top: 0px;
 	    position: relative;
-	}
-
-	.posttext {
-		font-size: 18px;
-		white-space: pre-wrap;
 	}
 
 	.div-list-header {

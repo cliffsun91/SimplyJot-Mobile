@@ -1,6 +1,6 @@
-$('#mainpage').on('pagebeforeshow', function () {
-  $("#mainpage").trigger("create");
-});
+// $('#mainpage').on('pagebeforeshow', function () {
+//   $("#mainpage").trigger("create");
+// });
 
 $(document).on("mobileinit", onMobileInit);
 
@@ -43,11 +43,12 @@ function onPageLoad() {// Document.Ready
 
 
 //testing stuff
-var postid = 1;
-var userid = 1;
+//var postid = 1;
+//var userid = 1;
 //**************
 
 var jot_get_posts_url = 'http://www.simplyjot.com/simplyjot/index.php/myposts/getallmyposts';
+var jot_create_post_url = 'http://www.simplyjot.com/simplyjot/index.php/myposts/createnewpost';
 var jot_login_url = 'http://www.simplyjot.com/simplyjot/index.php/site/externalLoginMobile?provider=';
 var app = angular.module('jot', ['ngTouch', 'ngRoute']);
 //var jot_login_url2 = 'http://www.simplyjot.com/simplyjot/index.php/site/externalLoginMobile?';
@@ -99,19 +100,27 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
   // $scope.posts = [
   //   {postContent:'This is the first item in the list', id: 0},
   //   {postContent:'New items are inserted to the top of the list', id: 1}];
-  $scope.posts.reverse();  
+  //$scope.posts.reverse();  
   $scope.deletePostList = [];
+
+  $scope.getAuthToken = function() {
+    return $window.localStorage.getItem("auth_accessToken");
+  };
+
+  $scope.getAuthEmail = function() {
+    return $window.localStorage.getItem("auth_email");
+  }
 
 
   $scope.requestPosts = function() {
-    alert("Post[token] is " + $window.localStorage.getItem("auth_accessToken"));
-    alert("Post[email] is " + $window.localStorage.getItem("auth_email"));
+    alert("Post[token] is " + $scope.getAuthToken());
+    alert("Post[email] is " + $scope.getAuthEmail());
 
-    var xsrf = {'Post[token]': $window.localStorage.getItem("auth_accessToken"), 
-                'Post[email]': $window.localStorage.getItem("auth_email")};
+    var xsrf = {'Post[token]': $scope.getAuthToken(), 
+                'Post[email]': $scope.getAuthEmail()};
 
     $http({
-      method: 'POST', 
+      method: 'GET', 
       url: jot_get_posts_url,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       transformRequest: function(obj) {
@@ -125,10 +134,20 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
     .then(function(response) {
       console.log("Post with status: " + response.status + ", data: " + response.data);
       alert("Post with status: " + response.status + ", data: " + response.data);
-      $scope.posts = response.data;
+      //$scope.posts = response.data;
+      $scope.posts = [];
+      angular.forEach(response.data, function(jsonData) {
+        var post = new Post();
+        post.id = jsonData.id;
+        post.postContent = jsonData.postContent;
+        post.timePosted = jsonData.timePosted;
+        post.synced = true;
+        $scope.posts.push(post);
+      });
+
     }, function(errorResponse){
-      console.log("Post request ERROR with status: " + errorResponse.status);
-      alert("Post request ERROR with status: " + errorResponse.status);
+      console.log("Post request ERROR with status: " + errorResponse.status + ", data:" + errorResonse.data);
+      alert("Post request ERROR with status: " + errorResponse.status + ", data:" + errorResonse.data);
     });
 
   };
@@ -138,10 +157,48 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
       //instead of all the below, i need to make a http post request
       //to the server and then just request latest posts
       //so none of the below would be needed, just the ajax post request
-      postid = postid+1;
+      //postid = postid+1;
+      var newPost = new Post();
+      //newPost.id = postid;
+      newPost.postContent = $scope.postText;
+
       $scope.posts.reverse();
-      $scope.posts.push({postContent:$scope.postText, id: postid});
+      //$scope.posts.push({postContent:$scope.postText, id: postid});
+      $scope.posts.push(newPost);
       $scope.posts.reverse();
+
+      var xsrf = {'Post[token]': $scope.getAuthToken(), 
+                  'Post[email]': $scope.getAuthEmail(),
+                  'Post[postContent]': $scope.postText};
+
+      $http({
+      method: 'POST', 
+      url: jot_create_post_url,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      transformRequest: function(obj) {
+        var str = [];
+        for(var p in obj)
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+      },
+      data: xsrf
+      })
+      .then(function(response) {
+        console.log("Post with status: " + response.status + ", data: " + response.data);
+        alert("Post with status: " + response.status + ", data: " + response.data);
+        //$scope.posts = response.data;
+        //angular.forEach(response.data, function(jsonData) {
+        var postJsonObject = response.data;
+        newPost.id = postJsonObject.id;
+        newPost.timePosted = postJsonObject.timePosted;
+        newPost.synced = true;
+        //});
+
+      }, function(errorResponse){
+        console.log("Post request ERROR with status: " + errorResponse.status);
+        alert("Post request ERROR with status: " + errorResponse.status);
+      });
+
       $scope.postText = '';
       //$scope.$apply();
       setTimeout(function () {
@@ -155,7 +212,7 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
   $scope.count = function() {
     var count = 0;
     angular.forEach($scope.posts, function(post) {
-      count += 1
+      count += 1;
     });
     return count;
   };
@@ -217,12 +274,12 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
 app.directive('jqueryMobileTpl', function () {
     return {
         link: function (scope, elm, attr) {
-            elm.listview('refresh');
+            //elm.listview('refresh');
         }
     };
 });
 app.directive('repeatDone', function () {
-    return function (scope, element) {
+    return function (scope, element, attrs) {
         // When the last element is rendered
         if (scope.$last) { 
             element.parent().parent().listview('refresh');
@@ -259,3 +316,9 @@ function contains(a, obj) {
     return false;
 }
 
+function Post() {
+  var id;
+  var postContent;
+  var timePosted;
+  var synced = false;
+}
