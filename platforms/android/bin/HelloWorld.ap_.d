@@ -21,6 +21,7 @@
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/index.html \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/index_default.html \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/js \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/mainpage.html \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/phonegap.js \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/plugins \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/res \

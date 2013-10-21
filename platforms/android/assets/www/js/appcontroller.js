@@ -104,6 +104,9 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
 
 
   $scope.requestPosts = function() {
+    alert("Post[token] is " + $window.localStorage.getItem("auth_accessToken"));
+    alert("Post[email] is " + $window.localStorage.getItem("auth_email"));
+
     var xsrf = {'Post[token]': $window.localStorage.getItem("auth_accessToken"), 
                 'Post[email]': $window.localStorage.getItem("auth_email")};
 
@@ -123,7 +126,9 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
       console.log("Post with status: " + response.status + ", data: " + response.data);
       alert("Post with status: " + response.status + ", data: " + response.data);
       $scope.posts = response.data;
-      //$scope.$apply();
+    }, function(errorResponse){
+      console.log("Post request ERROR with status: " + errorResponse.status);
+      alert("Post request ERROR with status: " + errorResponse.status);
     });
 
   };
@@ -140,10 +145,10 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
       $scope.postText = '';
       //$scope.$apply();
       setTimeout(function () {
-        $("#postlist").listview("refresh"); }, 1);
+        $("#postlist").listview("refresh"); 
+      }, 1);
       //$("#mainpage").parent().trigger( "create" );
       //$("#postlist").listview("refresh");
-
     }
   };
  
@@ -220,7 +225,7 @@ app.directive('repeatDone', function () {
     return function (scope, element) {
         // When the last element is rendered
         if (scope.$last) { 
-            element.parent().listview('refresh');
+            element.parent().parent().listview('refresh');
         }
     }
 });
