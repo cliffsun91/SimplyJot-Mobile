@@ -34,6 +34,15 @@
 
 <body> 
 
+<div data-role="page" id="frontpage">
+	<div data-role="content" ng-controller="frontpageCtrl">
+		<div class="div-frontpage-logo"><span class="span-frontpage-logo"><img src="img/sj-logo.png"/></span></div>
+		<br>
+		<div class="div-frontpage-loading"><span class="span-frontpage-loading">checking login</span></div>
+	</div> 
+</div>
+
+
 <div data-role="page" id="login">
 	<div data-role="header">
 		<h1>Login</h1>
@@ -49,7 +58,8 @@
 		    <div class="ui-block-b"><a ng-click="loginExternal('twitter')" class="btn-login-twitter" data-role="button" data-inline="true"></a></div>
 		    <div class="ui-block-c"><a ng-click="loginExternal('google')" class="btn-login-google" data-role="button" data-inline="true"></a></div>
 		</div>
-<!-- 		<div><a data-role="button" ng-click="nextPage()">Next Page</a></div> -->
+
+		<div><a data-role="button" ng-click="nextPage()">Next Page</a></div>
 		<!-- <div class="div-login-icons">
 			<span><a ng-click="loginExternal('facebook')" class="btn-login-facebook" data-role="button" data-inline="true"></a></span>
 			<span><a ng-click="loginExternal('twitter')" class="btn-login-twitter" data-role="button" data-inline="true"></a></span>
@@ -67,11 +77,11 @@
 			<!--<label for="textarea">Add to List:</label>-->
 			<form ng-submit="addPost()" data-ajax="false">
         		<div>
-        			<input id="textarea" type="text" ng-model="postText"  size="20" placeholder="add new post here">
+        			<input id="textarea" type="text" ng-model="postText"  size="20" placeholder="add new post here"/>
         		</div>
         		</br>
         		<div>
-        			<input id="add_button" class="btn-primary" type="submit" value="add">
+        			<input id="add_button" class="btn-primary" type="submit" value="add"/>
         		</div>
       		</form>
 		</div>
@@ -85,11 +95,11 @@
 				<span class="itemcount">{{count()}} items</span>
 			</div>
 
-			<div class="list">
-				<ul ng-init="requestPosts()" id="postlist" data-role="listview" data-split-theme="d" class="swipe-wrap" repeat-done ng-cloak>
+			<div class="list" jquery-mobile-tpl>
+				<ul id="postlist" data-role="listview" data-split-theme="d" class="swipe-wrap" repeat-done ng-cloak>
 	       			<li class="list-item" ng-repeat="post in posts" ng-swipe-left="addToDeleteList(post)" ng-swipe-right="removeFromDeleteList(post)">
 	       				 <!--ng-bind="post.text" -->
-	          			<a><div><p class="posttext">ID:{{post.id}} - Post: {{post.postContent}} - Synced:{{post.synced}}</p></div></a>
+	          			<a><div><p class="posttext"><span>ID:{{post.id}} - Post: {{post.postContent}} - Synced:{{post.synced}}</span></p></div></a>
 	          			<!--<input type="button" id="delete-post" data-role="button" data-inline="true" data-mini="true" data-icon="delete" name="delete" value="Delete" />-->
 	          			<a href ng-show="isSwipeDelete(post)" ng-click="delete(post)" data-icon="delete" id="delete-post" data-theme="c" class="split-button-custom" name="delete">Delete</a>
 	        		</li>

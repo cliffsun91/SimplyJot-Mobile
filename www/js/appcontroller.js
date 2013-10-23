@@ -1,6 +1,18 @@
-// $('#mainpage').on('pagebeforeshow', function () {
-//   $("#mainpage").trigger("create");
-// });
+$(document).ready(function() {
+  // Set the variable $width to the width of our wrapper on page load
+  var width = $(document).width();
+  //width = 200;
+  alert('width: ' + width);
+  // Target all images inside the #content. This works best if you want to ignore certain images that are part of the layout design
+  $('.span-frontpage-logo img').css({
+      // Using jQuery CSS we write the $width variable we previously specified as a pixel value. We use max-width incase the image is smaller than our viewport it won't scale it larger. Don't forget to set height to auto or else it will squish your photos.
+    'max-width' : width/1.5, 
+    'height' : 'auto',
+    'margin': '0 auto',
+    'display': 'block'
+  });
+});
+
 
 $(document).on("mobileinit", onMobileInit);
 
@@ -21,20 +33,20 @@ function onMobileInit() {
 function onPageLoad() {// Document.Ready
   //alert("Document Ready");
   console.log("document ready");
-  try {
-      //alert("token:" + window.localStorage.getItem("auth_accessToken") + ", email: " + window.localStorage.getItem("auth_email"));
-      if(window.localStorage.getItem("auth_accessToken") != null && 
-         window.localStorage.getItem("auth_email") != null) {
-          $.mobile.changePage("#mainpage");
-      } else {
-          $.mobile.changePage("#login");
-      }
-  } catch (exception) {
+  // try {
+  //     //alert("token:" + window.localStorage.getItem("auth_accessToken") + ", email: " + window.localStorage.getItem("auth_email"));
+  //     if(window.localStorage.getItem("auth_accessToken") != null && 
+  //        window.localStorage.getItem("auth_email") != null) {
+  //         $.mobile.changePage("#mainpage");
+  //     } else {
+  //         $.mobile.changePage("#login");
+  //     }
+  // } catch (exception) {
 
-  } finally {
-      //alert("initialise page now!");
-      //$.mobile.initializePage();
-  }
+  // } finally {
+  //     //alert("initialise page now!");
+  //     //$.mobile.initializePage();
+  // }
 }
 
 
@@ -50,17 +62,47 @@ function onPageLoad() {// Document.Ready
 var jot_get_posts_url = 'http://www.simplyjot.com/simplyjot/index.php/myposts/getallmyposts';
 var jot_create_post_url = 'http://www.simplyjot.com/simplyjot/index.php/myposts/createnewpost';
 var jot_login_url = 'http://www.simplyjot.com/simplyjot/index.php/site/externalLoginMobile?provider=';
+var jot_login_auth_check_url = "http://www.simplyjot.com/simplyjot/index.php/site/externalLoggedInMobile";
+var jot_logout_url = "http://www.simplyjot.com/simplyjot/index.php/site/externalLogoutMobile";
+
 var app = angular.module('jot', ['ngTouch', 'ngRoute']);
 //var jot_login_url2 = 'http://www.simplyjot.com/simplyjot/index.php/site/externalLoginMobile?';
 
+app.controller('frontpageCtrl', function ($scope, $rootScope, LoginService) {
+
+  $scope.init = function () {
+    LoginService.checkLoggedIn().then(function(response) {
+      alert("response status: " + response.status + ", data: " + response.data);
+      if(response.data == 1) {
+        $rootScope.$broadcast('getAllPosts');
+        $.mobile.changePage("#mainpage", {transition: "slide"});
+      }
+      else if(response.data == 0) {
+        $.mobile.changePage("#login", {transition: "slide"});
+      }
+      else {
+        alert("response: " + response.status + ", " + response.data);
+      }
+    },
+    function(errorResponse) {
+      console.log("Post request ERROR with status: " + errorResponse.status + ", data:" + errorResponse.data);
+      alert("Post request ERROR with status: " + errorResponse.status + ", data:" + errorResponse.data);
+    });
+  };
+
+  angular.element(document).ready(function () {
+    $scope.init();
+  });
+
+});
 
 
-app.controller('LoginCtrl', function ($scope, $window, $http) {
+app.controller('LoginCtrl', function ($scope, $rootScope, $window, $http) {
 
-  // $scope.nextPage = function() {
-  //   $.mobile.changePage("#mainpage", {transition: "slide"});
-  //   //$window.location.href = '/main';
-  // };
+  $scope.nextPage = function() {
+    $.mobile.changePage("#mainpage", {transition: "slide"});
+    //$window.location.hash = '#mainpage';
+  };
 
   $scope.loginExternal = function(method) {
     var ref = $window.open(jot_login_url + method, '_blank', 'location=no');
@@ -72,19 +114,19 @@ app.controller('LoginCtrl', function ($scope, $window, $http) {
                  '})()';
       if((event.url).indexOf(jot_login_url + method) != -1) {
         ref.executeScript({code: code}, function(results) {
-          if (results && results.length === 1){
-            var data =  JSON.parse(results[0]);
-            if (data.status == "success"){
-              $window.localStorage.setItem("auth_accessToken", data.token);
-              $window.localStorage.setItem("auth_email", data.email);    
-              $.mobile.changePage("#mainpage", {transition: "slide"});
-            }        
-            else {
-              console.log("Error: status was '" + data.status + "' and status message was '" + data.statusMessage + "'");
-            }
-            //close the browser
-            ref.close();
+          ref.close();
+          alert("result is: " + results);
+          if (results == "success"){
+            $rootScope.$broadcast('getAllPosts');
+            $.mobile.changePage("#mainpage", {transition: "slide"});
+          }  
+          else if (results == "not authenticated") {
+            //do something here
+          }      
+          else {
+            console.log("Error: " + results);
           }
+          //close the browser
         });
       }
     });
@@ -103,33 +145,14 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
   //$scope.posts.reverse();  
   $scope.deletePostList = [];
 
-  $scope.getAuthToken = function() {
-    return $window.localStorage.getItem("auth_accessToken");
-  };
-
-  $scope.getAuthEmail = function() {
-    return $window.localStorage.getItem("auth_email");
-  }
-
+  $scope.$on('getAllPosts', function() {
+    $scope.requestPosts();
+  });
 
   $scope.requestPosts = function() {
-    alert("Post[token] is " + $scope.getAuthToken());
-    alert("Post[email] is " + $scope.getAuthEmail());
-
-    var xsrf = {'Post[token]': $scope.getAuthToken(), 
-                'Post[email]': $scope.getAuthEmail()};
-
     $http({
       method: 'GET', 
       url: jot_get_posts_url,
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      transformRequest: function(obj) {
-        var str = [];
-        for(var p in obj)
-          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        return str.join("&");
-      },
-      data: xsrf
     })
     .then(function(response) {
       console.log("Post with status: " + response.status + ", data: " + response.data);
@@ -144,6 +167,10 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
         post.synced = true;
         $scope.posts.push(post);
       });
+
+      setTimeout(function () {
+        $("#postlist").listview("refresh"); 
+      }, 1);
 
     }, function(errorResponse){
       console.log("Post request ERROR with status: " + errorResponse.status + ", data:" + errorResonse.data);
@@ -167,9 +194,8 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
       $scope.posts.push(newPost);
       $scope.posts.reverse();
 
-      var xsrf = {'Post[token]': $scope.getAuthToken(), 
-                  'Post[email]': $scope.getAuthEmail(),
-                  'Post[postContent]': $scope.postText};
+      var xsrf = {'Post[postContent]': $scope.postText,
+                  'Post[postType]': 1};
 
       $http({
       method: 'POST', 
@@ -195,8 +221,8 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
         //});
 
       }, function(errorResponse){
-        console.log("Post request ERROR with status: " + errorResponse.status);
-        alert("Post request ERROR with status: " + errorResponse.status);
+        console.log("Post request ERROR with status: " + errorResponse.status + ", data: " + errorResponse.data);
+        alert("Post request ERROR with status: " + errorResponse.status + ", data: " + errorResponse.data);
       });
 
       $scope.postText = '';
@@ -274,7 +300,7 @@ app.controller('ListCtrl', function ($scope, $http, $window) {
 app.directive('jqueryMobileTpl', function () {
     return {
         link: function (scope, elm, attr) {
-            //elm.listview('refresh');
+            elm.listview('refresh');
         }
     };
 });
@@ -285,6 +311,26 @@ app.directive('repeatDone', function () {
             element.parent().parent().listview('refresh');
         }
     }
+});
+
+
+app.service('LoginService', function ($http, $q) {
+
+  this.checkLoggedIn = function() {
+    var deferred = $q.defer();
+    $http({
+      method: 'GET', 
+      url: jot_login_auth_check_url,
+    })
+    .then(function(response) {
+      deferred.resolve(response);
+    }, 
+    function(errorResponse) {
+      deferred.reject(errorResponse);
+    });
+
+    return deferred.promise;
+  };
 });
 
 

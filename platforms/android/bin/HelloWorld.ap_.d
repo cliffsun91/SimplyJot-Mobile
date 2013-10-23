@@ -32,6 +32,7 @@
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/img/facebookLogo.png \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/img/googleLogo.png \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/img/logo.png \
+/Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/img/sj-logo.png \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/img/twitterLogo.png \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/js/appcontroller.js \
 /Users/cliffsun91/Desktop/PersonalDevStuff/jotapp/platforms/android/assets/www/js/index_default.js \

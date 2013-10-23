@@ -1,3 +1,34 @@
+	.div-frontpage-logo {
+		margin: 0 auto;
+		text-align: center;
+		width: 100%;
+	}
+
+	.div-frontpage-loading {
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.span-frontpage-logo {
+		/*display: inline-block;*/
+		/*background-image: url("../img/sj-logo.png") !important;*/
+		/*background-size: 100px;*/
+/*		font-weight:bold;
+		font-size: 24px;*/
+		text-align: center;
+	}
+
+/*	.span-frontpage-header img {
+		margin: 0 auto;
+    	display: block;
+	}*/
+
+	.span-frontpage-loading {
+		/*display: inline-block;*/
+		font-size: 16px;
+		text-align: center;
+	}
+
 	#add_button {
 	    padding-top: 10px;
 	    padding-bottom: 10px;
