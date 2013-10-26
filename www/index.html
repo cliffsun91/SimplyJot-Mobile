@@ -2,7 +2,8 @@
 <html ng-app="jot"> 
 	<head> 
 	<title>Simply Jot</title> 
-	<meta name="viewport" content="width=default-width, initial-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+<!--     <meta name="viewport" content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> -->
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
 	<link rel="stylesheet" type="text/css" href="http://dev.jtsage.com/cdn/simpledialog/latest/jquery.mobile.simpledialog.min.css" /> 
 
@@ -12,9 +13,10 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-touch.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-route.min.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js"></script>-->
-    <script type="text/javascript" src="http://dev.jtsage.com/cdn/simpledialog/latest/jquery.mobile.simpledialog2.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
-	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" src="http://fgnass.github.io/spin.js/dist/spin.min.js"></script>
+    <script type="text/javascript" src="js/plugin/clipboardmanager.js"></script>
 
 	<script src="js/appcontroller.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css"/>
@@ -36,15 +38,17 @@
 
 <div data-role="page" id="frontpage">
 	<div data-role="content" ng-controller="frontpageCtrl">
-		<div class="div-frontpage-logo"><span class="span-frontpage-logo"><img src="img/sj-logo.png"/></span></div>
+		<div class="div-frontpage-logo"><span class="span-frontpage-logo"><img src="img/mainlogo/sj-logo.png"/></span></div>
 		<br>
-		<div class="div-frontpage-loading"><span class="span-frontpage-loading">checking login</span></div>
+		<div class="div-frontpage-loading-text"><span class="span-frontpage-loading-text">checking login</span></div>
+		<div class="div-frontpage-loading" us-spinner></div>
 	</div> 
 </div>
 
 
 <div data-role="page" id="login">
 	<div data-role="header">
+		<img src="img/mainlogo/sj-logo-tiny.png" class="ui-btn-left"/>
 		<h1>Login</h1>
 	</div>	
 
@@ -69,10 +73,17 @@
 </div>
 
 <div data-role="page" id="mainpage"> 
-	<div data-role="header">
-		<h1>Jot Down Anything</h1>
+	<div data-role="header" ng-controller="LogoutCtrl">
+		<!-- <a href data-role="button"></a> -->
+		<img src="img/mainlogo/sj-logo-tiny.png" class="ui-btn-left"/>
+		<h1>SimplyJot</h1>
+		<a href ng-click="logout()" data-role="button" data-icon="arrow-l" data-iconpos="right" class="ui-btn-right">Logout</a>
 	</div>	
 	<div data-role="content" ng-controller="ListCtrl">
+		<div ng-show="isUserEmailSet()" style="padding-top:-20px;">
+			<span style="font-size: 10px;">Logged in as: {{userEmail()}}</span>
+		</div>
+
 		<div data-role="fieldcontain">
 			<!--<label for="textarea">Add to List:</label>-->
 			<form ng-submit="addPost()" data-ajax="false">
@@ -92,6 +103,9 @@
 				<span ng-show="isDeleteListNonEmpty()" class="span-cancel-delete"><input ng-click="clearDeleteOptions()" id="canceldeletebutton" class="btn-cancel-delete" type="button" data-inline="true" data-mini="true" value="cancel"></span>
 			</div>
 			<div>
+				<span style="font-size:10px">(click on an item to copy it to the clipboard)</span>	
+			</div>
+			<div>
 				<span class="itemcount">{{count()}} items</span>
 			</div>
 
@@ -99,7 +113,7 @@
 				<ul id="postlist" data-role="listview" data-split-theme="d" class="swipe-wrap" repeat-done ng-cloak>
 	       			<li class="list-item" ng-repeat="post in posts" ng-swipe-left="addToDeleteList(post)" ng-swipe-right="removeFromDeleteList(post)">
 	       				 <!--ng-bind="post.text" -->
-	          			<a><div><p class="posttext"><span>ID:{{post.id}} - Post: {{post.postContent}} - Synced:{{post.synced}}</span></p></div></a>
+	          			<a href ng-click="copyToClipboard(post)"><div><p class="posttext"><span>ID:{{post.id}} - Post: {{post.postContent}} - Synced:{{post.synced}}</span></p></div></a>
 	          			<!--<input type="button" id="delete-post" data-role="button" data-inline="true" data-mini="true" data-icon="delete" name="delete" value="Delete" />-->
 	          			<a href ng-show="isSwipeDelete(post)" ng-click="delete(post)" data-icon="delete" id="delete-post" data-theme="c" class="split-button-custom" name="delete">Delete</a>
 	        		</li>

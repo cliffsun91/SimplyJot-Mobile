@@ -51,5 +51,7 @@
     <access origin="*"/>
     <content src="index.html" />
 
-    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser" />
+<!--     <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser" />
+ -->    
+<!--     <plugin name="ClipboardManagerPlugin" value="com.saatcioglu.phonegap.ClipboardManagerPlugin.ClipboardManagerPlugin"/> -->
 </widget>

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.cordova.helloCordova" version="2.0.0" xmlns="http://www.w3.org/ns/widgets">
-    <name>Hello Cordova</name>
+    <name>Simply Jot 2</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Simply Jot!
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
@@ -13,6 +13,15 @@
     </feature>
     <feature name="InAppBrowser">
         <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
+    <feature name="Notification">
+        <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
+    </feature>
+    <feature name="Vibration">
+        <param name="android-package" value="org.apache.cordova.vibration.Vibration" />
+    </feature>
+    <feature name="ClipboardManagerPlugin">
+        <param name="android-package" value="com.saatcioglu.phonegap.ClipboardManagerPlugin.ClipboardManagerPlugin" />
     </feature>
     <access origin="http://127.0.0.1*" />
     <access origin="*" />
