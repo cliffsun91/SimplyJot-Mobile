@@ -1,36 +1,50 @@
 <!DOCTYPE html> 
 <html ng-app="jot"> 
-	<head> 
+<head> 
 	<title>Simply Jot</title> 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />  
 <!--     <meta name="viewport" content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> -->
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
-	<link rel="stylesheet" type="text/css" href="http://dev.jtsage.com/cdn/simpledialog/latest/jquery.mobile.simpledialog.min.css" /> 
+
+    <link rel="stylesheet" href="js/jqueryiscroll/jquery.mobile.iscrollview.css"/>
+    <link rel="stylesheet" href="js/jqueryiscroll/jquery.mobile.iscrollview-pull.css"/>
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+
+	<script src="js/jqueryiscroll/iscroll.js"></script>
+    <script src="js/jqueryiscroll/jquery.mobile.iscrollview.js"></script>
+ 	<!-- // <script src="js/angulariscroll/ng-iscroll.js"></script> -->
+
+	<script src="js/hammer/hammer.js"></script>
+	<script src="js/hammer/jquery.hammer.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-touch.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-route.min.js"></script>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js"></script>-->
+  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-animate.min.js"></script>
+
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
     <script type="text/javascript" src="http://fgnass.github.io/spin.js/dist/spin.min.js"></script>
-    <script type="text/javascript" src="js/plugin/clipboardmanager.js"></script>
+    <script src="js/clipboardmanager/clipboardmanager.js"></script>
 
 	<script src="js/appcontroller.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 
-  <script type="text/javascript">
- //    // Check for iPhone screen size
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="css/spinner.css"/>
+ 
+	<script src="http://184.95.43.56:8081/socket.io/socket.io.js"></script>
+ 
+  <!-- // <script type="text/javascript"> -->
+<!--  //    // Check for iPhone screen size
  //    if($.mobile.media("screen and (min-width: 320px)")) {
  //        // Check for iPhone4 Retina Display
  //        if($.mobile.media("screen and (-webkit-min-device-pixel-ratio: 2)")) {
  //            $('meta[name=viewport]').attr('content','width=device-width, user-scalable=no,initial-scale=.5, maximum-scale=.5, minimum-scale=.5');
  //        }
- //    }
+ //    } -->
 
-  </script>
+  <!-- </script> -->
 
 </head> 
 
@@ -41,7 +55,7 @@
 		<div class="div-frontpage-logo"><span class="span-frontpage-logo"><img src="img/mainlogo/sj-logo.png"/></span></div>
 		<br>
 		<div class="div-frontpage-loading-text"><span class="span-frontpage-loading-text">checking login</span></div>
-		<div class="div-frontpage-loading" us-spinner></div>
+		<div class="div-frontpage-loading"><div class="spinner-front"></div></div>
 	</div> 
 </div>
 
@@ -72,26 +86,27 @@
 	</div>
 </div>
 
-<div data-role="page" id="mainpage"> 
+<div data-role="page" id="mainpage" class="pull-refresh-page"> 
 	<div data-role="header" ng-controller="LogoutCtrl">
 		<!-- <a href data-role="button"></a> -->
 		<img src="img/mainlogo/sj-logo-tiny.png" class="ui-btn-left"/>
 		<h1>SimplyJot</h1>
-		<a href ng-click="logout()" data-role="button" data-icon="arrow-l" data-iconpos="right" class="ui-btn-right">Logout</a>
+		<a href ng-click="logout()" data-role="button" data-icon="arrow-l" data-iconpos="right" class="ui-btn-right btn-logout">Logout</a>
 	</div>	
-	<div data-role="content" ng-controller="ListCtrl">
-		<div ng-show="isUserEmailSet()" style="padding-top:-20px;">
-			<span style="font-size: 10px;">Logged in as: {{userEmail()}}</span>
-		</div>
 
-		<div data-role="fieldcontain">
+
+	<div id="iscroll-wrapper" data-role="content" ng-controller="ListCtrl" data-iscroll>
+		<!-- <div ng-show="isUserEmailSet()" style="padding-top:0;"> -->
+			<span ng-show="isUserEmailSet()" style="font-size: 10px;">Logged in as: {{userEmail()}}</span>
+		<!-- </div> -->
+
+		<div class="div-field-contain" data-role="fieldcontain">
 			<!--<label for="textarea">Add to List:</label>-->
 			<form ng-submit="addPost()" data-ajax="false">
         		<div>
         			<input id="textarea" type="text" ng-model="postText"  size="20" placeholder="add new post here"/>
         		</div>
-        		</br>
-        		<div>
+        		<div class="div-add-button">
         			<input id="add_button" class="btn-primary" type="submit" value="add"/>
         		</div>
       		</form>
@@ -100,28 +115,48 @@
 		<div> 
 			<div class="div-list-header">
 				<span class="list-heading">Your List</span>
-				<span ng-show="isDeleteListNonEmpty()" class="span-cancel-delete"><input ng-click="clearDeleteOptions()" id="canceldeletebutton" class="btn-cancel-delete" type="button" data-inline="true" data-mini="true" value="cancel"></span>
+				<!-- <span ng-show="isDeleteListNonEmpty()" class="span-cancel-delete"><input ng-click="clearDeleteOptions()" id="canceldeletebutton" class="btn-cancel-delete" type="button" data-inline="true" data-mini="true" value="cancel"></span> -->
 			</div>
 			<div>
-				<span style="font-size:10px">(click on an item to copy it to the clipboard)</span>	
+				<span style="font-size:10px">(tap and hold on an item to copy it to the clipboard)</span>	
 			</div>
 			<div>
 				<span class="itemcount">{{count()}} items</span>
 			</div>
 
-			<div class="list" jquery-mobile-tpl>
+			<div id="iscroll-pullup-wrapper" class="list" jquery-mobile-tpl>
 				<ul id="postlist" data-role="listview" data-split-theme="d" class="swipe-wrap" repeat-done ng-cloak>
-	       			<li class="list-item" ng-repeat="post in posts" ng-swipe-left="addToDeleteList(post)" ng-swipe-right="removeFromDeleteList(post)">
+	       			<li class="list-item" ng-repeat="post in posts" ng-class="{'synced': !post.synced, 'swipe-left': isSwipeDelete(post)}" ng-swipe-left="setDelete(post)" ng-swipe-right="unsetDelete(post)" >
 	       				 <!--ng-bind="post.text" -->
-	          			<a href ng-click="copyToClipboard(post)"><div><p class="posttext"><span>ID:{{post.id}} - Post: {{post.postContent}} - Synced:{{post.synced}}</span></p></div></a>
+	          			<a href on-hold="copyToClipboard(post)"><div class="div-posttext"><p class="posttext">ID: {{post.id}} - {{post.postContent}} - Synced:{{post.synced}}</p></div>
+	          				<div class="split-button-loading" ng-show="isRequestingDelete(post)"><div class="spinner-delete"></div></div>
+	          			</a>
 	          			<!--<input type="button" id="delete-post" data-role="button" data-inline="true" data-mini="true" data-icon="delete" name="delete" value="Delete" />-->
-	          			<a href ng-show="isSwipeDelete(post)" ng-click="delete(post)" data-icon="delete" id="delete-post" data-theme="c" class="split-button-custom" name="delete">Delete</a>
+	          			<!-- <div class="split-custom-wrapper"> -->
+		          			<!-- <a href class="split-button-loading" ><div class="spinner-delete"></div></a> -->
+		          			<!-- <div class="split-button-loading"><div class="spinner-delete"></div></div> -->
+		          			<a href ng-show="isSwipeDelete(post)" ng-click="requestDeletePost(post)" data-icon="delete" id="delete-post" data-theme="c" class="split-button-custom">Delete</a>
+		          		<!-- </div> -->
 	        		</li>
 	      		</ul>
+	      		<div class="div-loading-older-posts" ng-if="requestingPosts || requestedAllOlderPosts">
+					{{loadMoreText}}
+				</div>
 	      	</div>
 			
+
 			<!-- data-icon="false" data-split-icon="delete" data-split-theme="d" -->
 		</div>
+
+
+<!-- 		<div class="iscroll-pullup">
+			<span class="iscroll-pull-icon"></span>
+			<span class="iscroll-pull-label" 
+					data-iscroll-loading-text="Loading more history..." 
+					data-iscroll-pulled-text="Release to load more"
+					>Pull up to load more</span>
+		</div> -->
+
 	</div> <!--content-->
 
 </div> 

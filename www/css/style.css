@@ -1,3 +1,17 @@
+	.ui-page .ui-header {
+    	background: #112233 !important;
+	}
+
+	/* to get rid of the box shadow underneath text */
+	.ui-body-c, .ui-overlay-c { 
+		text-shadow:0 0 0; 
+	}
+
+	.ui-content {
+	    padding-top: 5px;
+	}
+
+
 	.div-frontpage-logo {
 		margin: 0 auto;
 		text-align: center;
@@ -9,8 +23,9 @@
 	}
 
 	.div-frontpage-loading {
-		margin-top: 10px;
-		padding-bottom: 50px;
+		margin-top: 15px;
+		/*padding-top: 20px;*/
+		/*padding-bottom: 50px;*/
 		text-align: center;
 	}
 
@@ -37,7 +52,9 @@
 		margin: 0 auto;
 		text-align: center;
 	}*/
-
+	.btn-logout {
+		background: #112233 !important;
+	}
 
 	#add_button {
 	    padding-top: 10px;
@@ -52,13 +69,12 @@
 		padding-top: 20px;
 	}
 
-	.list-item {
-		padding-top: 10px;
-	}
 
 	.posttext {
+		padding-top: 15px;
 		font-size: 16px;
 		white-space: pre-wrap;
+		text-shadow:0 0 0;
 	}
 
 	.itemcount {
@@ -70,39 +86,74 @@
 		font-size: 8px;
 	}
 
+	.div-posttext {
+		float: left;
+	}
+
+	.postlist {
+		border: 1px black;
+	}
+
+	.split-custom-wrapper {
+	    /* position wrapper on the right of the listitem */
+	    position: absolute;
+	    right: 0;
+	    top: 0;
+	    height: 100%;
+	}
+
+	.split-button-loading {
+		/*position: relative;*/
+		/*background-color: red;*/
+		padding-top:5px;
+		float: right;
+	}
+
 	.split-button-custom {
 	    float: right;
-	    margin-right: 5px;
+	    margin-right: 0px;
 	    padding-left: 4px;
-	    padding-right: 3px;
-	    border-radius: 5px;
-	    border-bottom-left-radius: 1em 1em;
+	    padding-right: 4px;
+	    right:-40px;
+	    border:none;
+/*	    border-radius: 5px;*/
+/*	    border-bottom-left-radius: 1em 1em;
 	    border-bottom-right-radius: 1em 1em;
 	    border-top-left-radius: 1em 1em;
-	    border-top-right-radius: 1em 1em;  
+	    border-top-right-radius: 1em 1em;  */
 	    /*-webkit-transition: left 0.01s;
 	    -moz-transition: left 0.01s; */
 	}
 
-	.split-button-custom.ng-enter, .split-button-custom.ng-leave {
+/*	.split-button-custom.ng-hide-add, 
+	.split-button-custom.ng-hide-remove {
 	    -webkit-transition:0.5s linear all;
 	    -moz-transition:0.5s linear all;
 	    -o-transition:0.5s linear all;
 	    transition:0.5s linear all;
+	    display:block!important;
+	}*/
 
-	    position:absolute;
-	    top:0;
-	    left:0;
-	    right:0;
-	}
-
-	.split-button-custom span.ui-btn-inner {
+/*	.split-button-custom span.ui-btn-inner {
 	    border-bottom-left-radius: 1em 1em;
 	    border-bottom-right-radius: 1em 1em;
 	    border-top-left-radius: 1em 1em;
 	    border-top-right-radius: 1em 1em;
 	    padding-right: 0px;
+	}*/
+
+/*	.split-button-custom.ng-hide-remove {
+	  opacity:0;
 	}
+	.split-button-custom.ng-hide-remove.ng-show-remove-active {
+	  opacity:1;
+	}
+	.split-button-custom.ng-hide-add {
+	  opacity:1;
+	}
+	.split-button-custom.ng-hide-add.ng-show-add-active {
+	  opacity:0;
+	}*/
 
 	.split-button-custom span.ui-icon {
 		background-color: #FF5252;
@@ -174,20 +225,75 @@
 		font-size: 18px;
 	}
 
-
-/*
-	.swipe {
-		overflow: hidden;
-		visibility: hidden;
-		position: relative;
+	.div-loading-older-posts {
+		/*border: 1px solid black;*/
+		-moz-box-shadow:    inset 0 0 3px black;
+   		-webkit-box-shadow: inset 0 0 3px black;
+   		box-shadow:         inset 0 0 3px black;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		margin-top: 20px;
+		text-align: center;
 	}
 
-	.swipe-wrap {
-	  	overflow: hidden;
-	  	position: relative;
+
+	.div-field-contain {
+		padding-top: 15px;
 	}
-	.swipe-wrap > div {
-		float:left;
-		width:100%;
-		position: relative;
-	}*/
+
+	.div-add-button {
+		padding-top: 10px;
+	}
+
+	.list-item.synced-remove {
+	  -webkit-transition:0.5s linear all;
+	  -moz-transition:0.5s linear all;
+	  -o-transition:0.5s linear all;
+	  transition:0.5s linear all;
+	}
+
+    .list-item.synced,
+    .list-item.synced-remove {
+        background: #45A8FF !important
+    } 
+
+    .list-item.synced-remove.synced-remove-active {
+      background: white !important;
+    }
+
+    .list-item.swipe-left {
+    	left:-40px;
+    }
+
+    .list-item.ng-leave {
+    	-webkit-transition: 0.4s linear all;
+		-moz-transition: 0.4s linear all;
+		-o-transition: 0.4s linear all;
+		transition: 0.4s linear all;
+		position:relative;
+    }
+
+    .list-item.ng-leave {
+		left:-48px;
+		opacity:1;
+	}
+
+	.list-item.ng-leave.ng-leave-active {
+		left:-80px;
+		opacity:0;
+	}
+
+	.list-item.ng-move {
+		opacity:0.5;
+	}
+
+	.list-item.ng-move.ng-move-active {
+		opacity:1;
+	}
+
+	.list-item {
+		border: 5px black;
+	}
+
+
+
